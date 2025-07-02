@@ -23,7 +23,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createProperty = exports.getProperty = exports.getProperties = void 0;
+exports.createProperty = exports.getPropertyLeases = exports.getProperty = exports.getProperties = void 0;
 const client_1 = require("@prisma/client");
 const wkt_1 = require("@terraformer/wkt");
 const client_s3_1 = require("@aws-sdk/client-s3");
@@ -149,6 +149,26 @@ const getProperty = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     }
 });
 exports.getProperty = getProperty;
+const getPropertyLeases = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    try {
+        const leases = yield prisma.lease.findMany({
+            where: {
+                propertyId: Number(id)
+            },
+            include: {
+                tenant: true // optional
+            }
+        });
+        res.status(200).json(leases);
+    }
+    catch (error) {
+        res.status(500).json({
+            message: `Failed to fetch leases for property ${id}: ${error.message}`
+        });
+    }
+});
+exports.getPropertyLeases = getPropertyLeases;
 const createProperty = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a, _b, _c, _d;
     try {

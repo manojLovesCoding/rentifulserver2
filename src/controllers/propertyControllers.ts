@@ -190,6 +190,31 @@ export const getProperty = async (
   }
 };
 
+
+
+
+export const getPropertyLeases = async (req: Request, res: Response): Promise<void> => {
+  const { id } = req.params;
+
+  try {
+    const leases = await prisma.lease.findMany({
+      where: {
+        propertyId: Number(id)
+      },
+      include: {
+        tenant: true // optional
+      }
+    });
+
+    res.status(200).json(leases);
+  } catch (error: any) {
+    res.status(500).json({
+      message: `Failed to fetch leases for property ${id}: ${error.message}`
+    });
+  }
+};
+
+
 export const createProperty = async (
   req: Request,
   res: Response

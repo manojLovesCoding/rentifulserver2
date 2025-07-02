@@ -3,6 +3,7 @@ import {
   getProperties,
   getProperty,
   createProperty,
+  getPropertyLeases // ✅ add this
 } from "../controllers/propertyControllers";
 import multer from "multer";
 import { authMiddleware } from "../middleware/authMiddleware";
@@ -20,5 +21,8 @@ router.post(
   upload.array("photos"),
   createProperty
 );
+router.get("/:id/leases", getPropertyLeases); // ✅ register it
+
+
 
 export default router;
